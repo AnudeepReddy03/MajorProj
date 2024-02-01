@@ -23,14 +23,14 @@ const Login = ({ setCurrentUser }) => {
         setSubmitButtonDisabled(true);
         await signInWithEmailAndPassword(auth, username, password);
         setCurrentUser(username);
-        window.localStorage.setItem('isLoggedin',true);
-        window.localStorage.setItem('usernameis',username);
+        window.localStorage.setItem('isLoggedin', true);
+        window.localStorage.setItem('usernameis', username);
         setSubmitButtonDisabled(false);
         navigate('/');
       }
     } catch (error) {
       console.error('Error logging in:', error.message);
-      setErrorMsg("Invalid Credentials");
+      setErrorMsg('Invalid Credentials');
       setSubmitButtonDisabled(false);
     }
   };

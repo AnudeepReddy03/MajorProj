@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
@@ -7,14 +7,19 @@ import './App.css';
 import PreviousUpload from './components/Previousupload';
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const isLoggedin = window.localStorage.getItem('isLoggedin');
-  const hereuser = window.localStorage.getItem('usernameis');
+  const [currentUser, setCurrentUser] = useState(() => {
+    const storedUser = JSON.parse(window.localStorage.getItem('currentUser'));
+    return storedUser || null;
+  });
+
   const logout = () => {
-    window.localStorage.removeItem('isLoggedin');
-    window.localStorage.removeItem('usernameis');
+    window.localStorage.removeItem('currentUser');
     setCurrentUser(null);
   };
+
+  useEffect(() => {
+    window.localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  }, [currentUser]);
 
   return (
     <Router>
@@ -25,14 +30,14 @@ const App = () => {
               <h4 className="navbar-item">Hate Speech Detection</h4>
             </div>
             <div className="navbar-menu">
-              {isLoggedin ? (
+              {(currentUser) ? (
                 <>
                   <div style={{ color: 'aliceblue', marginRight: '15px' }}>
-                    {`Welcome, ${hereuser}`}
+                    {`Welcome, ${currentUser}`}
                   </div>
                   <div>
-                    <Link to="/logout" className="nav-item nav-link btn btn-dark mx-2" onClick={logout}>
-                      Logout
+                    <Link to="/" className="nav-item nav-link btn btn-dark mx-2">
+                      Home
                     </Link>
                   </div>
                   <div>
@@ -40,6 +45,12 @@ const App = () => {
                       Previous Uploads
                     </Link>
                   </div>
+                  <div>
+                    <Link to="/logout" className="nav-item nav-link btn btn-dark mx-2" onClick={logout}>
+                      Logout
+                    </Link>
+                  </div>
+                 
                 </>
               ) : (
                 <>
